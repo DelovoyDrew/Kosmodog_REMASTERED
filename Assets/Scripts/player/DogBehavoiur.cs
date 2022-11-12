@@ -17,6 +17,10 @@ public class DogBehavoiur : MonoBehaviour
     int jumpih=0;
     int touch=1;
     Rigidbody2D rbd;
+
+    public bool IsRunning;
+    public bool IsJumping;
+
     void Start()
     {
         
@@ -58,17 +62,18 @@ public class DogBehavoiur : MonoBehaviour
 
     void Update()
     {
-        
-        transform.Translate(7*Time.deltaTime*bustsc*Boxbusts*touch, 0, 0);
-        if (transform.position.y < -8)
-        {
-            StartCoroutine("die");
-        }
-        Grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, wtfIsGround);
-        if (Grounded==true)
-        {
-            jumpih = 0;
-        }
+        if (IsRunning) anim.SetBool("Run", true);
+        if (IsJumping) anim.SetBool("Jump", true);
+        //transform.Translate(7*Time.deltaTime*bustsc*Boxbusts*touch, 0, 0);
+        //if (transform.position.y < -8)
+        //{
+        //    StartCoroutine("die");
+        //}
+        //Grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, wtfIsGround);
+        //if (Grounded==true)
+        //{
+        //    jumpih = 0;
+        //}
     }
     bool partcontrol = true;
     private IEnumerator die()
