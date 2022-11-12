@@ -93706,9 +93706,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7171383551846981169, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: _speed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7171383551846981173, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: m_Name
       value: Dog
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171383551846981173, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7171383551846981326, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: Owner
@@ -93760,11 +93768,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7171383551941642695, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.23
+      value: 3.3
       objectReference: {fileID: 0}
     - target: {fileID: 7171383551941642695, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.14
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: 7171383552068933266, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: m_LocalPosition.y
