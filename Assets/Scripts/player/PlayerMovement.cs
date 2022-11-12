@@ -2,12 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private Transform _isThereObstacle;
     [SerializeField] private GameObject _shadow;
+    [SerializeField] private Animator _animator;
 
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce = 110;
@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask _wtfIsGround;
 
     private Rigidbody2D _rigidbody;
-    private Animator _animator;
 
     private OwnerBehaviour _owner;
 
@@ -27,9 +26,11 @@ public class PlayerMovement : MonoBehaviour
 
     private const float _distanceToStopInFrontObstacle = .05f;
 
+    private string _jumpAnimation = "Jump";
+    private string _runAnimation = "Run";
+
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -95,9 +96,12 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator JumpAnimation()
     {
-        _animator.SetInteger("blum", 2);
-        yield return new WaitForSeconds(.1f);
-        _animator.SetInteger("blum", 3);
+        _animator.SetBool(_runAnimation, false);
+        _animator.SetBool(_jumpAnimation, true);
+        yield return new WaitUntil(() => _grounded);
+        _animator.SetBool(_jumpAnimation, false);
+        _animator.SetBool(_runAnimation, true);
+
 
     }
 

@@ -10,13 +10,7 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     
-    public GameObject stvol;
-    public GameObject pool;
-    public GameObject particles;
-
-   
-
-    GameObject yodapart;
+    [SerializeField] private ParticleSystem _dieParticles;
 
     private PlayerMovement _movement;
     private PlayerShooting _shooting;
@@ -72,9 +66,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(.05f);
 
-        yodapart = Instantiate(particles);
-        yodapart.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
-
+        _dieParticles.Play();
         _movement.StopMovement(true);
 
         _owner.CanAppear = false;
