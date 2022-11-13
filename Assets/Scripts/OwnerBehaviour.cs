@@ -5,6 +5,10 @@ using UnityEngine;
 public class OwnerBehaviour : DontTouchingEnemy
 {
     [SerializeField] private List<Transform> _stopPoints;
+    [SerializeField] private Transform _obstacleChecker;
+    [SerializeField] private float _distanceToStopInFrontObstacle;
+    [SerializeField] private float _jumpForce;
+    [SerializeField] private OwnerMovementSettings _speeds = new OwnerMovementSettings();
 
     public GameObject player;
     public LayerMask wtfIsGround;
@@ -13,13 +17,17 @@ public class OwnerBehaviour : DontTouchingEnemy
     public float GroundRadius = 0.2f;
     Rigidbody2D rcd;
 
-    public bool isCanChangeSpeed => _speedChanging == null;
     private Coroutine _speedChanging;
+    private OwnerMovementSettings.CurrentSpeedType _currentSpeedType;
+    private float _currentSpeed;
+
 
     public bool CanAppear;
 
     void Start()
     {
+        _currentSpeedType = OwnerMovementSettings.CurrentSpeedType.Normal;
+        _currentSpeed = _speeds.GetSpeed(_currentSpeedType);
         rcd = GetComponent<Rigidbody2D>();
     }
 
@@ -29,73 +37,122 @@ public class OwnerBehaviour : DontTouchingEnemy
         {
             if (transform.position.y < -8)
             {
-                this.gameObject.SetActive(false);
-                speed = 9f;
+                Disappear();
             }
-            if (player.transform.position.x - transform.position.x >=8|| transform.position.x - player.transform.position.x >=8)
+            if (player.transform.position.x - transform.position.x >=10|| transform.position.x - player.transform.position.x >=10)
             {
-                this.gameObject.SetActive(false);
-                speed = 9f;
+                Disappear();
             }
 
             foreach (var point in _stopPoints)
             {
                 if(Mathf.Abs(transform.position.x - point.position.x) <.1f)
                 {
-                    StartCoroutine(SmoothlyChangeSpeed(3));
+                    StartCoroutine(StartChangingSpeed(OwnerMovementSettings.CurrentSpeedType.Stop));
+                    break;
                 }
             }
 
             Grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, wtfIsGround);
-
-            RaycastHit2D hit;
-            Ray2D ray = new Ray2D(new Vector2(transform.position.x, transform.position.y - 0.7f), 1 * transform.right);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - 0.7f), ray.direction * 1.4f);
-            hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.7f), ray.direction * 1.4f);
-            if (hit.collider != null)
-            {
-                if (hit.collider.gameObject.name == "myground" && Grounded == true && hit.distance <= 1.4f)
-                {
-
-                    rcd.velocity = Vector2.zero;
-                    rcd.AddForce(transform.up * 120, ForceMode2D.Impulse);
-                }
-            }
-
-            transform.Translate(speed * Time.deltaTime, 0, 0);
+            transform.Translate(_currentSpeed * Time.deltaTime, 0, 0);
         }
     }
-    float  speed =9f;
+
+    private void FixedUpdate()
+    {
+        Ray2D ray = new Ray2D(new Vector2(_obstacleChecker.transform.position.x, 0), transform.right);
+        RaycastHit2D hit = Physics2D.Raycast(_obstacleChecker.position, ray.direction, _distanceToStopInFrontObstacle);
+
+        if (hit.collider != null && hit.collider.tag == "Obstacle" && Grounded)
+        {
+            rcd.AddForce(transform.up * _jumpForce, ForceMode2D.Impulse);
+
+        }
+    }
+
+    public void Disappear()
+    {
+        StopAllCoroutines();
+        _currentSpeedType = OwnerMovementSettings.CurrentSpeedType.Chasing;
+        gameObject.SetActive(false);
+    }
 
     public void TryAppear(Vector3 playerPosition)
     {
         if (!CanAppear) return;
 
         transform.position = playerPosition + new Vector3(-7.8f, 4, 0);
-        speed = 10;
+
         gameObject.SetActive(true);
 
-        StartCoroutine(SmoothlyChangeSpeed(9));
-        StartCoroutine(SmoothlyChangeSpeed(4, 2));
+        StartChasing();
     }
 
-    public void StartChangingSpeed(float targetSpeed, float time = 0)
+    public void StartChasing()
     {
-        if (!isCanChangeSpeed) StopCoroutine(_speedChanging);
-
-        _speedChanging = null;
-        _speedChanging = StartCoroutine(SmoothlyChangeSpeed(targetSpeed, time));
+        StartCoroutine(StartChangingSpeed(OwnerMovementSettings.CurrentSpeedType.Chasing));
+        StartCoroutine(StartChangingSpeed(OwnerMovementSettings.CurrentSpeedType.Normal, _speeds.ReturnToNormalSpeedDelay));
+        StartCoroutine(StartChangingSpeed(OwnerMovementSettings.CurrentSpeedType.Slow, _speeds.ReturnToSlowSpeedDelay));
     }
 
-    private IEnumerator SmoothlyChangeSpeed(float targetSpeed, float time = 0)
+    public IEnumerator StartChangingSpeed(OwnerMovementSettings.CurrentSpeedType type, float time = 0)
     {
         yield return new WaitForSeconds(time);
 
-        while(Mathf.Abs(speed-targetSpeed) >.01f)
+        if (_currentSpeedType == OwnerMovementSettings.CurrentSpeedType.Stop) yield break;
+        if (_speedChanging != null) StopCoroutine(_speedChanging);
+
+        _currentSpeedType = type;
+
+        _speedChanging = StartCoroutine(SmoothlyChangeSpeed(_speeds.GetSpeed(_currentSpeedType)));
+    }
+
+    private IEnumerator SmoothlyChangeSpeed(float targetSpeed)
+    {
+        while(Mathf.Abs(_currentSpeed - targetSpeed) >.01f)
         {
-            speed = Mathf.Lerp(speed, targetSpeed, 0.6f * Time.deltaTime);
+            _currentSpeed = Mathf.Lerp(_currentSpeed, targetSpeed, _speeds.SmoothChangingSpeedValue * Time.deltaTime);
             yield return null;
         }
     }
 
+}
+
+[System.Serializable]
+public class OwnerMovementSettings
+{
+    [SerializeField] private float NormalSpeed;
+    [SerializeField] private float ChasingSpeed;
+    [SerializeField] private float SlowDownSpeed;
+    [SerializeField] private float StopSpeed;
+
+    public float ReturnToNormalSpeedDelay;
+    public float ReturnToSlowSpeedDelay;
+
+    public float SmoothChangingSpeedValue = 0.6f;
+
+    public enum CurrentSpeedType
+    {
+        Normal,
+        Chasing,
+        Slow,
+        Stop
+    }
+
+    public float GetSpeed(CurrentSpeedType type)
+    {
+        switch(type)
+        {
+            case CurrentSpeedType.Normal:
+                return NormalSpeed;
+            case CurrentSpeedType.Chasing: 
+                return ChasingSpeed;
+            case CurrentSpeedType.Slow:
+                return SlowDownSpeed;
+            case CurrentSpeedType.Stop:
+                return StopSpeed;
+        }
+
+        throw new System.Exception("Not Supported type");
+    }
 }

@@ -72,10 +72,10 @@ public class PlayerMovement : MonoBehaviour
         Ray2D ray = new Ray2D(new Vector2(_isThereObstacle.transform.position.x, 0),  transform.right);
         RaycastHit2D hit = Physics2D.Raycast(_isThereObstacle.position, ray.direction, _distanceToStopInFrontObstacle);
 
-        if (hit.collider != null && hit.collider.tag == "Floor")
+        if (hit.collider != null && hit.collider.tag == "Obstacle")
         {
             if (_owner.gameObject.activeSelf == false) _owner.TryAppear(transform.position);
-            else _owner.StartChangingSpeed(10);
+            else _owner.StartChasing();
             return;
         }
         int canMove = _canMove ? 1 : 0;

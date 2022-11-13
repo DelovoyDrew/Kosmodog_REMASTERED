@@ -7,10 +7,10 @@ public class ChildrenTransparentRegulator : MonoBehaviour
 {
     [Range(0,1)] [SerializeField] private float _transparentness = .3f;
 
-
     private void OnValidate()
     {
-      //  WithForeachLoop();
+        //  WithForeachLoop();
+        if (gameObject.activeSelf == false) return;
         WithForLoop();
     }
 
