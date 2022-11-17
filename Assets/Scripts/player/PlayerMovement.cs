@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _jumpForce = 110;
     [SerializeField] private int _doubleJumpCount = 2;
     [SerializeField] private float GroundRadius = 0.3f;
+    [SerializeField] private float _distanceToStopInFrontObstacle = .05f;
     [SerializeField] private LayerMask _wtfIsGround;
 
     private Rigidbody2D _rigidbody;
@@ -23,8 +24,6 @@ public class PlayerMovement : MonoBehaviour
     private int _jumpsCount;
     private bool _isReadyToJump;
     private bool _canMove;
-
-    private const float _distanceToStopInFrontObstacle = .05f;
 
     private string _jumpAnimation = "Jump";
     private string _runAnimation = "Run";
