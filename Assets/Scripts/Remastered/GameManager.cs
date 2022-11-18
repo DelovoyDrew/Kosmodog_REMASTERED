@@ -1,10 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<BoneHP> _boneHPs;
+    [SerializeField] private GameObject _continueInterface;
 
     public static GameManager GameController;
 
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviour
             _boneHPs.Remove(hp);
 
             _player.Revive(_currentCheckPoint.SpawnPoint.position);
+
+            _continueInterface.SetActive(true);
         }
     }
 
@@ -46,6 +49,8 @@ public class GameManager : MonoBehaviour
         if (_boneHPs.Count == 0) return;
 
         _owner.CanAppear = true;
-        _owner.TryAppear(_player.transform.position);
+        _player.StartMovement();
+        _continueInterface.SetActive(false);
+        // _owner.TryAppear(_player.transform.position);
     }
 }

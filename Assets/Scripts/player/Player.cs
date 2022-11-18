@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        PlayerPrefs.SetInt("partcontroll", 0);
         _owner = FindObjectOfType<OwnerBehaviour>();
         _movement = GetComponent<PlayerMovement>();
         _shooting = GetComponent<PlayerShooting>();
@@ -28,7 +27,7 @@ public class Player : MonoBehaviour
     {
         if (transform.position.y < -10)
         {
-            StartCoroutine("die");
+            StartCoroutine(Die());
         }
     }
 
@@ -36,33 +35,19 @@ public class Player : MonoBehaviour
     {
         transform.position = position;
         gameObject.SetActive(true);
-        _movement.StopMovement(false);
     }
 
     public void Shootg()
     {
         _shooting.TryShoot();
     }
-
     
-    public GameObject Owner;
-   
-    bool lol = false;
-    public GameObject Boss;
-    public GameObject buttonSTOP;
-
-
-    public void starttime()
-    {
-        buttonSTOP.SetActive(false);
-    }
-   
     public void StartMovement()
     {
         _movement.StopMovement(false);
     }
    
-    private IEnumerator die()
+    private IEnumerator Die()
     {
         yield return new WaitForSeconds(.05f);
 
@@ -71,7 +56,10 @@ public class Player : MonoBehaviour
 
         _owner.CanAppear = false;
         _owner.gameObject.SetActive(false);
+        _owner.CanAppear = true;
         gameObject.SetActive(false);
+
+        _movement.StopMovement(true);
         GameManager.GameController.TryToRevivePlayer();
     }
 
@@ -79,7 +67,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out DontTouchingEnemy enemy))
         {
-            StartCoroutine(die());
+            StartCoroutine(Die());
         }
     }
 
@@ -88,7 +76,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out DontTouchingEnemy enemy))
         {
-            StartCoroutine(die());
+            StartCoroutine(Die());
         }
     }
 }
