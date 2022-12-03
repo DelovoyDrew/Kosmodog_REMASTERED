@@ -4,19 +4,24 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static Player PlayerInstance;
+
+    public static bool IsPlayerAlive;
+
     [SerializeField] private List<BoneHP> _boneHPs;
     [SerializeField] private GameObject _continueInterface;
 
     public static GameManager GameController;
 
     private CheckPoint _currentCheckPoint;
-    private Player _player;
     private OwnerBehaviour _owner;
 
     private void Awake()
     {
-        _player = FindObjectOfType<Player>();
+        PlayerInstance = FindObjectOfType<Player>();
         _owner = FindObjectOfType<OwnerBehaviour>();
+        IsPlayerAlive = true;
     }
 
     private void Start()
@@ -30,26 +35,28 @@ public class GameManager : MonoBehaviour
         _currentCheckPoint = point;
     }
 
-    public void TryToRevivePlayer()
+    public bool TryToRevivePlayer()
     {
-        if(_boneHPs.Count > 0)
+        if (_boneHPs.Count > 0)
         {
             var hp = _boneHPs[_boneHPs.Count - 1];
             hp.gameObject.SetActive(false);
             _boneHPs.Remove(hp);
 
-            _player.Revive(_currentCheckPoint.SpawnPoint.position);
+            PlayerInstance.Revive(_currentCheckPoint.SpawnPoint.position);
 
             _continueInterface.SetActive(true);
+            return true;
         }
+        return false;
     }
 
     public void ContinueGame()
     {
         if (_boneHPs.Count == 0) return;
-
+        IsPlayerAlive = true;
         _owner.CanAppear = true;
-        _player.StartMovement();
+        PlayerInstance.StartMovement();
         _continueInterface.SetActive(false);
         // _owner.TryAppear(_player.transform.position);
     }

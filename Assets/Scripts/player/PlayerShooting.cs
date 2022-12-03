@@ -37,4 +37,11 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(.1f);
         _blownEffect.gameObject.SetActive(false);
     }
+
+    public void ResetShooting()
+    {
+        StopAllCoroutines();
+        _blownEffect.gameObject.SetActive(false);
+        _canShoot = true;
+    }
 }

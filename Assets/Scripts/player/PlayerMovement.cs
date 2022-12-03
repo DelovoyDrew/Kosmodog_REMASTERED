@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform _isThereObstacle;
     [SerializeField] private GameObject _shadow;
     [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _bodyTransform;
 
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce = 110;
@@ -52,6 +53,17 @@ public class PlayerMovement : MonoBehaviour
         CheckIsGround();
     }
 
+
+    public void ResetMovement()
+    {
+        StopMovement(true);
+        StopAllCoroutines();
+        _animator.SetBool(_jumpAnimation, false);
+        _animator.SetBool(_runAnimation, true);
+        _rigidbody.velocity = Vector2.zero;
+        _isReadyToJump = true;
+    }
+
     public void TryJump()
     {
         if(_jumpsCount < _doubleJumpCount && _isReadyToJump)
@@ -64,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
     public void StopMovement(bool isStoped)
     {
         _canMove = !isStoped;
+        _animator.SetBool(_runAnimation, isStoped);
     }
 
     private void TryMove()

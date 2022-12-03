@@ -49,10 +49,14 @@ public class Player : MonoBehaviour
    
     private IEnumerator Die()
     {
-        yield return new WaitForSeconds(.05f);
+        GameManager.IsPlayerAlive = false;
+
+        yield return new WaitForSeconds(.11f);
+
+        _movement.ResetMovement();
+        _shooting.ResetShooting();
 
         _dieParticles.Play();
-        _movement.StopMovement(true);
 
         _owner.CanAppear = false;
         _owner.gameObject.SetActive(false);
@@ -60,7 +64,9 @@ public class Player : MonoBehaviour
         gameObject.SetActive(false);
 
         _movement.StopMovement(true);
-        GameManager.GameController.TryToRevivePlayer();
+        if(GameManager.GameController.TryToRevivePlayer())
+        {
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
