@@ -14692,16 +14692,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5878aa63767e4b040ab4838bfade7d56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnBorder: {fileID: 31922138}
-  _rocketTemplate: {fileID: 8410068148314235579, guid: 00dc3667eb37a4e459b24efe81d8a9b1, type: 3}
-  _warning: {fileID: 923640805}
-  _rocketSettings:
-    WarningLaunchDelay: 2
-    Direction: {x: -1, y: 0, z: 0}
-    TimeBetweenLaunches: {x: 4, y: 6}
-    TimeTillDestroy: 10
-    PositionRandomizer: {x: 1, y: 3}
-    SpeedRandomizer: {x: -15, y: -20}
 --- !u!1001 &798661320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17260,7 +17250,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d922f0e12043f9648b36cec559369b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 1519495867}
 --- !u!224 &923640806
 RectTransform:
   m_ObjectHideFlags: 0
@@ -39738,6 +39727,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1465985292944538448, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.50481045
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465985292944538448, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.8898168
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465985292944538448, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99997646
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465985292944538448, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0068662376
+      objectReference: {fileID: 0}
+    - target: {fileID: 1465985292944538448, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0.787
+      objectReference: {fileID: 0}
     - target: {fileID: 4062909589570315419, guid: bcb778aee5c137c40a58719ed7e4c1ae, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
