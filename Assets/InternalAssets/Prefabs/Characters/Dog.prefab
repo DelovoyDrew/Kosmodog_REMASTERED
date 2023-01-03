@@ -1208,6 +1208,7 @@ MonoBehaviour:
   _isThereObstacle: {fileID: 7171383551941642695}
   _shadow: {fileID: 7171383552398597676}
   _animator: {fileID: 8634696426565653317}
+  _bodyTransform: {fileID: 0}
   _speed: 7
   _jumpForce: 120
   _doubleJumpCount: 1
